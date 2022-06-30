@@ -32,5 +32,8 @@ defmodule Richter.Scheduler do
 end
 
 defmodule Richter.Test do
-  def test(message), do: "Message: #{message}" |> IO.inspect()
+  def test(message) do
+    t = DateTime.utc_now()
+    "Message: #{message} at #{t}" |> IO.inspect()
+  end
 end

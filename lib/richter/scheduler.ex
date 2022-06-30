@@ -34,6 +34,8 @@ end
 defmodule Richter.Test do
   def test(message) do
     t = DateTime.utc_now()
-    "Message: #{message} at #{t}" |> IO.inspect()
+    message = "Message: #{message} at #{t}"
+    Richter.Store.put(message)
+    Richter.Store.get_all() |> IO.inspect()
   end
 end

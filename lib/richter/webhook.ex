@@ -1,8 +1,7 @@
-defmodule Richter.Webhook do
+defmodule Richter.Router do
   @moduledoc """
-  HTTP API to test webhook requests from the Richter earthquake service.
-
-  Most of this is boilerplate plug stuff.
+  HTTP API to process subscriptions and to test webhook requests from the
+  Richter earthquake service.
   """
 
   use Plug.Router

@@ -12,7 +12,7 @@ defmodule Richter.Application do
     port = System.get_env("PORT") || "8765" |> String.to_integer()
 
     children = [
-      {Plug.Cowboy, scheme: :http, plug: Richter.Webhook, port: port},
+      {Plug.Cowboy, scheme: :http, plug: Richter.Router, port: port},
       {Richter.Store, %{}},
       {Richter.Scheduler,
        [

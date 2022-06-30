@@ -4,7 +4,7 @@ defmodule Richter.Scheduler do
   to call quasi-periodically. In this implementation, the schduler is blocked
   until the function execution completes. This will introduced drift into the
   timing. If strict periodicity is required, the function could be called
-  asynchronously.
+  asynchronously, perhaps with `Task.async`.
 
   A more robust, but still relatively simple, solution would use something like
   the `Quantum` library to achieve cron-like functionality.

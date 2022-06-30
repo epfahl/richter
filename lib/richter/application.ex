@@ -5,15 +5,18 @@ defmodule Richter.Application do
 
   @doc """
   Note that `Richter.Store` needs to be started before `Richter.Scheduler`,
-  because the scheduler calls the store on init. This took me too long to
-  figure out!
+  because the scheduler calls the store on init. (This took me too long to
+  figure out!)
   """
   def start(_type, _args) do
+    port = System.get_env("PORT") || "8765" |> String.to_integer()
+
     children = [
+      {Plug.Cowboy, scheme: :http, plug: Richter.Webhook, port: port},
       {Richter.Store, %{}},
       {Richter.Scheduler,
        [
-         mfa: [Richter.Test, :test, []],
+         mfa: [Richter.Temp, :run, []],
          period: @scheduler_period
        ]}
     ]

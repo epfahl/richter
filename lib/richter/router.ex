@@ -13,8 +13,8 @@ defmodule Richter.Router do
   # Post endpoint for subscriptions.
   #
   # Validation should probably be done with Ecto changesets...?
-  # Example subscription payload:
-
+  # Example JSON subscription payload:
+  #
   # {
   #   "id": "KnXegis",
   #   "start": 1618958220000,

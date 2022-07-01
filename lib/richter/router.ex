@@ -13,6 +13,21 @@ defmodule Richter.Router do
   # Post endpoint for subscriptions.
   #
   # Validation should probably be done with Ecto changesets...?
+  # Example subscription payload:
+
+  # {
+  #   "id": "KnXegis",
+  #   "start": 1618958220000,
+  #   "details": {
+  #     "endpoint": "https://receiver.mywebservice.com/earthquakes",
+  #     "filters": [
+  #       {
+  #         "type": "magnitude",
+  #         "minimum": 1.0
+  #       }
+  #     ]
+  #   }
+  # }
   post "/subscribe" do
     time = DateTime.utc_now() |> DateTime.to_unix()
 

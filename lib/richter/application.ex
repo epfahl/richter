@@ -13,12 +13,13 @@ defmodule Richter.Application do
 
     children = [
       {Plug.Cowboy, scheme: :http, plug: Richter.Router, port: port},
-      {Richter.Store, %{}},
-      {Richter.Scheduler,
-       [
-         mfa: [Richter.Temp, :run, []],
-         period: @scheduler_period
-       ]}
+      Richter.Repo
+      # {Richter.Store, %{}},
+      # {Richter.Scheduler,
+      #  [
+      #    mfa: [Richter.Temp, :run, []],
+      #    period: @scheduler_period
+      #  ]}
     ]
 
     opts = [strategy: :one_for_one, name: Richter.Supervisor]

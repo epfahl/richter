@@ -25,7 +25,9 @@ defmodule Richter.MixProject do
       {:req, "~> 0.3.0"},
       {:plug_cowboy, "~> 2.0"},
       {:jason, "~> 1.3"},
-      {:uuid, "~> 1.1"}
+      {:uuid, "~> 1.1"},
+      {:ecto_sql, "~> 3.8"},
+      {:postgrex, "~> 0.16.3"}
     ]
   end
 end

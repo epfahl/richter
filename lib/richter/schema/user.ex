@@ -6,7 +6,7 @@ defmodule Richter.Schema.User do
   schema "user" do
     field(:endpoint, :string)
     field(:filters, {:array, :map})
-    many_to_many(:event, Richter.Schema.Event, join_through: "user_event")
+    many_to_many(:event, Richter.Schema.Event, join_through: Richter.Schema.UserEvent)
 
     timestamps()
   end

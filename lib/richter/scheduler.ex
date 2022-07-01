@@ -21,7 +21,7 @@ defmodule Richter.Scheduler do
   end
 
   @doc """
-  Info callback that responds to `Process.send_after`.
+  Callback that responds to `Process.send_after`.
   """
   def handle_info(:work, state) do
     execute(state)

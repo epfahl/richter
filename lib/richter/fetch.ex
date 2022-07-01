@@ -35,7 +35,7 @@ defmodule Richter.Fetch do
   # Rather than use `Req.get!`, which raises an exception in case of an error, this
   # function uses the more primitive `Req.request`, which allows explicit handling of
   # error messages. Error handling may not be needed initially, but it'll be easy to
-  # add when it is.
+  # add later.
   #
   # This is also where HTTP status codes would be handled, if needed.
   defp request(url) do

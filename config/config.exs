@@ -1,7 +1,7 @@
 import Config
 
 config :richter, Richter.Repo,
-  database: "quakes",
+  database: "richter",
   username: "postgres",
   password: "postgres",
   hostname: "localhost",

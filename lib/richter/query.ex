@@ -1,7 +1,7 @@
 defmodule Richter.Query do
   alias Richter.Repo
   alias Richter.Schema.{User, Event}
-  alias Richter.Transforms, as: T
+  alias Richter.Transform, as: T
 
   import Ecto.Query
   import Geo.PostGIS

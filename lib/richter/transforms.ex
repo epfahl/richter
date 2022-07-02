@@ -1,4 +1,4 @@
-defmodule Richter.Transforms do
+defmodule Richter.Transform do
   @moduledoc """
   Useful data transformations.
   """

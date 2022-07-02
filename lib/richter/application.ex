@@ -17,7 +17,7 @@ defmodule Richter.Application do
       # {Richter.Store, %{}},
       {Richter.Scheduler,
        [
-         mfa: [Richter.Feed, :get_and_insert_hourly_events, []],
+         mfa: [Richter.EventData, :get_and_insert_last_1hour_events, []],
          period: @scheduler_period
        ]}
     ]

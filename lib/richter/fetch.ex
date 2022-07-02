@@ -1,6 +1,6 @@
 defmodule Richter.Fetch do
   @moduledoc """
-  Accessors for fetching hourly and monthly earthquake data from the USGS website.
+  Fetch hourly and monthly earthquake data from the USGS website.
   """
 
   @url_1hour "https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/1.0_hour.geojson"

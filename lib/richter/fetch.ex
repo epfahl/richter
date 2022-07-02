@@ -9,8 +9,8 @@ defmodule Richter.Fetch do
   @doc """
   Get earthquakes with magnitude greater than 1 within the last hour.
 
-  The `with` block is included here in case pre-processing of the body is needed
-  later.
+  The `with` block is included here in case pre-processing of the body or error
+  handling is needed later.
   """
   def get_last_1hour() do
     with {:ok, body} <- request(@url_1hour) do
@@ -22,7 +22,8 @@ defmodule Richter.Fetch do
   Get earthquakes with magnitude greater than 1 within the last 30 days. The URL
   used to retrieve this data returns earthquakes of _all_ magnitudes. The list of
   quakes under the "features" key of the body is filtered to include quakes with
-  magnitude ("mag" key) >= 1.
+  magnitude ("mag" key) >= 1 to be consistent with the feed from the endpoint for
+  hourly data.
   """
   def get_last_30days() do
     with {:ok, body} <- request(@url_30days) do

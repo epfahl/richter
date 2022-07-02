@@ -3,7 +3,7 @@ defmodule Richter.Temp do
   Temporary quake fetcher and processor for testing during development.
   """
 
-  @webhook_url "http://localhost:8765/quake_alert"
+  @webhook_url "http://localhost:8765/notify"
 
   def run() do
     # Store each of the quakes as %{id => feature}

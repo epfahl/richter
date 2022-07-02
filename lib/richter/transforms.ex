@@ -25,13 +25,18 @@ defmodule Richter.Transforms do
   a Geo.Point struct, and 3) returning a properly shaped payload.
   """
   def prepare_event(event) do
+    # Feature ID used as event primary key
+    id = event["id"]
+
     # Convert from unix millisecond "time" (presumably UTC) to DateTime
-    time = event["properties"]["time"] |> DateTime.from_unix!(:millisecond)
+    time =
+      event["properties"]["time"]
+      |> DateTime.from_unix!(:millisecond)
 
     # From "geometry", create lnglat as a Geo.Point struct
     lnglat = geometry_to_point(event)
 
-    %{time: time, lnglat: lnglat, details: event}
+    %{id: id, time: time, lnglat: lnglat, details: event}
   end
 
   @doc """

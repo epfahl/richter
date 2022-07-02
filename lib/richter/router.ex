@@ -41,18 +41,6 @@ defmodule Richter.Router do
 
         send_resp(conn, 400, resp)
     end
-
-    # time = DateTime.utc_now() |> DateTime.to_unix()
-
-    # resp =
-    #   Map.merge(
-    #     %{
-    #       "details" => conn.body_params
-    #     },
-    #     %{id: UUID.uuid4(), start: time}
-    #   )
-
-    # send_resp(conn, 200, resp |> Jason.encode!())
   end
 
   # Post endpoint for testing the notification webhook.

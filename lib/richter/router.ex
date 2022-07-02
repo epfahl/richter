@@ -43,7 +43,7 @@ defmodule Richter.Router do
   end
 
   # Post endpoint for testing the alert webhook.
-  post "/alert" do
+  post "/notify" do
     send_resp(conn, 200, conn.body_params |> Jason.encode!())
   end
 

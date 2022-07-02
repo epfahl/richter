@@ -14,7 +14,6 @@ defmodule Richter.Application do
     children = [
       {Plug.Cowboy, scheme: :http, plug: Richter.Router, port: port},
       Richter.Repo,
-      # {Richter.Store, %{}},
       {Richter.Scheduler,
        [
          mfa: [Richter.EventData, :get_and_insert_last_1hour_events, []],

@@ -27,11 +27,14 @@ defmodule Richter.Query do
   prepare and validate the maps, and then perform a bulk insert.
   """
   def insert_events(events) do
-    validated_events =
+    changesets =
       events
       |> T.prepare_event_list()
+      |> IO.inspect()
 
-    Repo.insert_all(Event, validated_events, on_conflict: :nothing)
+    Repo.transaction(fn ->
+      changesets |> Enum.each(&Repo.insert!(&1, on_conflict: :nothing))
+    end)
   end
 
   defp extract_changeset_errors(changeset) do

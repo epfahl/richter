@@ -7,16 +7,14 @@ defmodule Richter.Transforms do
   @doc """
   Prepare a list of raw event payloads by 1) restructuring each event to have
   the proper shape, 2) validating and creating a changeset for each event, and
-  3) reducing the list of valid changesets to Event structs.
+  3) filtering for valid changesets
   """
   def prepare_event_list(events) do
-    changesets =
-      events
-      |> Enum.map(&prepare_event/1)
-      |> Enum.map(&Event.changeset(%Event{}, &1))
-
-    # Filter the list of changesets for valid results and extract the data
-    for %{changes: data, valid?: true} <- changesets, do: data
+    # changesets =
+    events
+    |> Enum.map(&prepare_event/1)
+    |> Enum.map(&Event.changeset(%Event{}, &1))
+    |> Enum.filter(fn c -> c.valid? end)
   end
 
   @doc """

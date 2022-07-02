@@ -2,7 +2,7 @@ defmodule Richter.Scheduler do
   @moduledoc """
   A simple GenServer-based scheduler that accepts an MFA argument for a function
   to call quasi-periodically. In this implementation, the schduler is blocked
-  until the scheduled task completes. This will introduce drift into the
+  until the scheduled work completes. This will introduce drift into the
   timing if execution time is significant. It is advisable to wrap execution in
   an async process, perhaps with `Task.start` or `Task.async`.
 

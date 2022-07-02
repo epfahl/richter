@@ -9,6 +9,8 @@ defmodule Richter.Schema.Event do
     field(:lnglat, Geo.PostGIS.Geometry)
     field(:time, :utc_datetime)
     many_to_many(:user, Richter.Schema.User, join_through: Richter.Schema.UserEvent)
+
+    timestamps()
   end
 
   def changeset(event, params \\ %{}) do

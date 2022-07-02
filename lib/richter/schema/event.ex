@@ -5,6 +5,7 @@ defmodule Richter.Schema.Event do
 
   schema "event" do
     field(:details, :map)
+    field(:lnglat, Geo.PostGIS.Geometry)
     many_to_many(:user, Richter.Schema.User, join_through: Richter.Schema.UserEvent)
 
     timestamps()

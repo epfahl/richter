@@ -9,13 +9,11 @@ defmodule Richter.Schema.Event do
     field(:lnglat, Geo.PostGIS.Geometry)
     field(:time, :utc_datetime)
     many_to_many(:user, Richter.Schema.User, join_through: Richter.Schema.UserEvent)
-
-    timestamps()
   end
 
   def changeset(event, params \\ %{}) do
     event
-    |> cast(params, [:details, :lnglat, :time])
-    |> validate_required([:details, :lnglat, :time])
+    |> cast(params, [:id, :details, :lnglat, :time])
+    |> validate_required([:id, :details, :lnglat, :time])
   end
 end

@@ -25,6 +25,11 @@ defmodule Richter.Query do
   @doc """
   Given a list of USGC earthquake events ("features") as normal maps,
   prepare and validate the maps, and then perform a bulk insert.
+
+  Note: `on_conflict: :nothing` is there so that we can attempt to insert
+  the same event (same "id") multiple times without raising a constraint
+  error. Many contiguous queries of hourly event data will return common
+  events.
   """
   def insert_events(events) do
     changesets =
@@ -33,7 +38,8 @@ defmodule Richter.Query do
       |> IO.inspect()
 
     Repo.transaction(fn ->
-      changesets |> Enum.each(&Repo.insert!(&1, on_conflict: :nothing))
+      changesets
+      |> Enum.each(&Repo.insert!(&1, on_conflict: :nothing))
     end)
   end
 

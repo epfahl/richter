@@ -7,7 +7,8 @@ defmodule Richter.MixProject do
       version: "0.1.0",
       elixir: "~> 1.13",
       start_permanent: Mix.env() == :prod,
-      deps: deps()
+      deps: deps(),
+      aliases: aliases()
     ]
   end
 
@@ -29,6 +30,12 @@ defmodule Richter.MixProject do
       {:ecto_sql, "~> 3.8"},
       {:postgrex, "~> 0.16.3"},
       {:geo_postgis, "~> 3.4"}
+    ]
+  end
+
+  defp aliases do
+    [
+      test: "test --no-start"
     ]
   end
 end

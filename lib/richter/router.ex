@@ -5,7 +5,9 @@ defmodule Richter.Router do
   """
 
   use Plug.Router
-  alias Richter.Query
+
+  alias Richter.Query, as: Q
+  alias Richter.Subscription, as: S
 
   plug(:match)
   plug(Plug.Parsers, parsers: [:json], json_decoder: Jason)
@@ -30,18 +32,18 @@ defmodule Richter.Router do
   #
   # %{
   #   data: nil | echo ofsubscription data,
-  #   errors: [error messages]
+  #   errors: error message | [error messages]
   # }
   #
   post "/subscribe" do
-    case Query.insert_user(conn.body_params) do
-      {:ok, user} ->
-        resp =
-          %{data: create_user_response(user), errors: []}
-          |> Jason.encode!()
+    with {:ok, updated_body} <- S.update_subscription(conn.body_params),
+         {:ok, user} <- Q.insert_user(updated_body) do
+      resp =
+        %{data: S.create_user_response_data(user), errors: []}
+        |> Jason.encode!()
 
-        send_resp(conn, 200, resp)
-
+      send_resp(conn, 200, resp)
+    else
       {:error, errors} ->
         resp =
           %{data: nil, errors: errors}
@@ -99,22 +101,5 @@ defmodule Richter.Router do
 
   match _ do
     send_resp(conn, 404, "Something is very wrong.")
-  end
-
-  defp create_user_response(user) do
-    deleted_keys = [:__meta__, :inserted_at, :updated_at, :event]
-
-    start = user.inserted_at
-
-    user
-    |> Map.from_struct()
-    |> Map.put(:start, start)
-    |> delete_keys(deleted_keys)
-  end
-
-  defp delete_keys(map, keys) do
-    map
-    |> Enum.filter(fn {k, _v} -> not Enum.member?(keys, k) end)
-    |> Enum.into(%{})
   end
 end

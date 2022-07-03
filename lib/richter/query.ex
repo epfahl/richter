@@ -111,13 +111,12 @@ defmodule Richter.Query do
   end
 
   @doc """
-  Get event _details_ for which the user has not yet been notified and that
-  meet the user's filter criteria.
+  Get event _details_ for which the user has not yet been notified. No
+  additional filters are applied at this step.
   """
-  def get_new_user_events(user_id, _filters) do
+  def get_new_user_events(user_id) do
     query_new_events(user_id)
     |> Repo.all()
-    |> Enum.filter(fn _e -> true end)
   end
 
   # Query for all users

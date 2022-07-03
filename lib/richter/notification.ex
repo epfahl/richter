@@ -17,7 +17,7 @@ defmodule Richter.Notification do
         Time: #{DateTime.utc_now()}
       """)
 
-      # Insert join on request acknoledgement
+      # Insert user-event join on notification request acknoledgement
       Q.insert_user_event(%{user_id: user_id, event_id: event.id})
     end
   end

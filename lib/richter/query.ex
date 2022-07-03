@@ -114,11 +114,10 @@ defmodule Richter.Query do
   Get event _details_ for which the user has not yet been notified and that
   meet the user's filter criteria.
   """
-  def get_new_user_events_details(user_id, _filters) do
+  def get_new_user_events(user_id, _filters) do
     query_new_events(user_id)
     |> Repo.all()
     |> Enum.filter(fn _e -> true end)
-    |> Enum.map(fn e -> e.details end)
   end
 
   # Query for all users
@@ -135,21 +134,21 @@ defmodule Richter.Query do
   # to handle this filtering in the DB, which would entail transformaing declarative
   # filter experssions into query fragments.
   defp query_new_events(user_id) do
-    que =
-      from(u in UserEvent,
-        where: u.user_id == ^user_id,
-        select: u.event_id
+    q_ue =
+      from(ue in UserEvent,
+        where: ue.user_id == ^user_id,
+        select: ue.event_id
       )
 
-    qeue =
+    q_e_except =
       from(e in Event,
-        except: ^que,
+        except: ^q_ue,
         select: e.id
       )
 
-    from(e in Event,
-      join: eq in ^qeue,
-      on: eq.id == e.id,
+    from(e_except in subquery(q_e_except),
+      join: e in Event,
+      on: e_except.id == e.id,
       select: e
     )
   end

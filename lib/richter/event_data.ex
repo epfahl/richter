@@ -16,6 +16,9 @@ defmodule Richter.EventData do
     just inserts with impunity, counting on conflict handling to prevent dupes.
     It might make sense to check for new events (ID set difference) before
     insertion, but it's not clear if this would improve performance.
+  * TODO: Alternatively, it might make sense to cache (in memory) recently
+    inserted event IDs and use this for comparison. This avoids hitting the DB
+    and is the best option performance-wise.
   """
   def get_and_insert_last_1hour_events(), do: get_and_insert_events(:hour)
 
@@ -30,8 +33,8 @@ defmodule Richter.EventData do
 
   # Abstraction to handle event inserts.
   defp get_and_insert_events(interval) do
-    with {:ok, %{"features" => events}} <- fetch_fun(interval).() do
-      Query.insert_events(events)
+    with {:ok, %{"features" => features}} <- fetch_fun(interval).() do
+      Query.insert_events(features)
     end
   end
 

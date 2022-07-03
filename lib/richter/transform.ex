@@ -5,36 +5,38 @@ defmodule Richter.Transform do
   alias Richter.Schema.{Event}
 
   @doc """
-  Prepare a list of raw event payloads by 1) restructuring each event to have
-  the proper shape, 2) validating and creating a changeset for each event, and
+  Prepare a list of raw event payloads by 1) restructuring USGS features to have
+  the proper event shape, 2) validating and creating a changeset for each event, and
   3) filtering for valid changesets
   """
-  def prepare_event_list(events) do
-    # changesets =
-    events
+  def prepare_event_list(features) do
+    features
     |> Enum.map(&prepare_event/1)
     |> Enum.map(&Event.changeset(%Event{}, &1))
     |> Enum.filter(fn c -> c.valid? end)
   end
 
   @doc """
-  Prepare a single USGS event (a "feature") by 1) extracting event time and
+  Prepare a single USGS features by 1) extracting event time and
   transforming it to a DateTime, 2) extracing the long and lat and creating
   a Geo.Point struct, and 3) returning a properly shaped payload.
   """
-  def prepare_event(event) do
+  def prepare_event(feature) do
     # Feature ID used as event primary key
-    id = event["id"]
+    id = feature["id"]
+
+    # Quake magnitude
+    mag = feature["mag"]
 
     # Convert from unix millisecond "time" (presumably UTC) to DateTime
     time =
-      event["properties"]["time"]
+      feature["properties"]["time"]
       |> DateTime.from_unix!(:millisecond)
 
     # From "geometry", create lnglat as a Geo.Point struct
-    lnglat = geometry_to_point(event)
+    lnglat = geometry_to_point(feature)
 
-    %{id: id, time: time, lnglat: lnglat, details: event}
+    %{id: id, time: time, magnitude: mag, lnglat: lnglat, details: feature}
   end
 
   @doc """

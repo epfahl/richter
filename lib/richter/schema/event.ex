@@ -16,7 +16,7 @@ defmodule Richter.Schema.Event do
 
   def changeset(event, params \\ %{}) do
     event
-    |> cast(params, [:id, :details, :lnglat, :time])
-    |> validate_required([:id, :details, :lnglat, :time])
+    |> cast(params, [:id, :details, :lnglat, :magnitude, :time])
+    |> validate_required([:id, :details, :lnglat, :magnitude, :time])
   end
 end

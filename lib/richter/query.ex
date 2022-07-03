@@ -1,6 +1,6 @@
 defmodule Richter.Query do
   alias Richter.Repo
-  alias Richter.Schema.{User, UserEvent}
+  alias Richter.Schema.{User, Event, UserEvent}
   alias Richter.Transform, as: T
 
   import Ecto.Query
@@ -101,6 +101,41 @@ defmodule Richter.Query do
   """
   def insert_user_event(user_event) do
     insert_one(UserEvent, user_event)
+  end
+
+  @doc """
+  Get events for which the user has not yet been notified and that meet the user's
+  filter criteria.
+  """
+  def get_new_user_events(user_id, _filters) do
+    query_new_events(user_id)
+    |> Repo.all()
+    |> Enum.filter(fn _e -> true end)
+  end
+
+  # Query events for which the user has not been notified.
+  #
+  # Note (TODO?): This does not apply user filters. It might be nice to handle
+  # this filtering in the DB, which would entail transformaing declarative
+  # filter experssions into query fragments.
+  defp query_new_events(user_id) do
+    que =
+      from(u in Richter.Schema.UserEvent,
+        where: u.user_id == ^user_id,
+        select: u.event_id
+      )
+
+    qeue =
+      from(e in Event,
+        except: ^que,
+        select: e.id
+      )
+
+    from(e in Event,
+      join: eq in ^qeue,
+      on: eq.id == e.id,
+      select: e
+    )
   end
 
   # For the given `schema` insert a single `data` payload.

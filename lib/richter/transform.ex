@@ -26,7 +26,7 @@ defmodule Richter.Transform do
     id = feature["id"]
 
     # Quake magnitude
-    mag = feature["mag"]
+    mag = feature["properties"]["mag"]
 
     # Convert from unix millisecond "time" (presumably UTC) to DateTime
     time =

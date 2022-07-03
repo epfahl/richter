@@ -2,6 +2,7 @@ defmodule Richter.Fetch do
   @moduledoc """
   Fetch hourly and monthly earthquake data from the USGS website.
   """
+  alias Richter.Util, as: U
 
   @url_1hour "https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/1.0_hour.geojson"
   @url_30days "https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/all_month.geojson"
@@ -13,7 +14,7 @@ defmodule Richter.Fetch do
   handling is needed later.
   """
   def get_last_1hour() do
-    with {:ok, body} <- request(@url_1hour) do
+    with {:ok, body} <- U.request(@url_1hour, :get) do
       {:ok, body}
     end
   end
@@ -26,23 +27,8 @@ defmodule Richter.Fetch do
   hourly data.
   """
   def get_last_30days() do
-    with {:ok, body} <- request(@url_30days) do
+    with {:ok, body} <- U.request(@url_30days, :get) do
       {:ok, filter_body(body)}
-    end
-  end
-
-  # Request data from the URL and return the response body.
-  #
-  # Rather than use `Req.get!`, which raises an exception in case of an error, this
-  # function uses the more primitive `Req.request`, which allows explicit handling of
-  # error messages. Error handling may not be needed initially, but it'll be easy to
-  # add later.
-  #
-  # This is also where HTTP status codes would be handled, if needed.
-  defp request(url) do
-    case Req.request(method: :get, url: url) do
-      {:ok, %Req.Response{body: body}} -> {:ok, body}
-      {:error, _error} -> {:error, "something bad happened"}
     end
   end
 

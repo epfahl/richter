@@ -1,7 +1,7 @@
 defmodule Richter.Application do
   use Application
 
-  @default_scheduler_period :timer.seconds(30)
+  @default_scheduler_period :timer.seconds(60)
 
   @doc """
   Note that `Richter.Store` needs to be started before `Richter.Scheduler`,

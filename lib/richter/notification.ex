@@ -16,7 +16,9 @@ defmodule Richter.Notification do
 
     Q.get_all_users()
     |> Enum.each(fn u ->
-      user_events = Q.get_new_user_events(u.id, u.filters)
+      user_events =
+        Q.get_new_user_events(u.id)
+        |> apply_user_filters(u.filters)
 
       if user_events != [] do
         # FIXME: This concurrently sends a batch of user notifications, but
@@ -58,4 +60,36 @@ defmodule Richter.Notification do
       Q.insert_user_event(%{user_id: user_id, event_id: event_id})
     end
   end
+
+  # Apply filters to the list of events. Each filter is a map, and each
+  # corresponds to a separate predicate expression.
+  #
+  # Notes
+  # -----
+  # * There is an opportunity to generalize the declarative filter language (eg.,
+  #   via {key, operation, value} structure) and the actual filtering mechanics.
+  defp apply_user_filters(events, filters) do
+    events
+    |> Enum.filter(fn e ->
+      filters
+      |> Enum.map(fn f -> filter_predicate(e, f) end)
+      |> Enum.all?()
+    end)
+  end
+
+  # Return a boolean that indicates if the magnitude is at least the minimum
+  # given in the user filter.
+  defp filter_predicate(e, %{"type" => "magnitude", "minimum" => m}) do
+    e.magnitude >= m
+  end
+
+  # Return a boolean that indicates if (now - event time) is less than the
+  # maximum given in the user filter.
+  defp filter_predicate(e, %{"type" => "event_age_hours", "maximum" => m}) do
+    hours = U.datetime_diff_hours(DateTime.utc_now(), e.time)
+    hours <= m
+  end
+
+  # Unhandled filters do have no effect.
+  defp filter_predicate(_e, _filter), do: true
 end

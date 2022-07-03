@@ -8,6 +8,7 @@ defmodule Richter.Schema.Event do
     field(:details, :map)
     field(:lnglat, Geo.PostGIS.Geometry)
     field(:time, :utc_datetime)
+    field(:magnitude, :float)
     many_to_many(:user, Richter.Schema.User, join_through: Richter.Schema.UserEvent)
 
     timestamps()

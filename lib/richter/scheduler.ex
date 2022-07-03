@@ -12,7 +12,7 @@ defmodule Richter.Scheduler do
   use GenServer
 
   def start_link([mfa: [_module, _function, _args], period: _period] = state) do
-    GenServer.start_link(__MODULE__, state, name: __MODULE__)
+    GenServer.start_link(__MODULE__, state)
   end
 
   def init(state) do

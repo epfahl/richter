@@ -88,7 +88,7 @@ defmodule Richter.Router do
   #   data: nil | binary | map,
   #   errors: [error messages]
   # }
-
+  #
   post "/notify" do
     resp =
       %{data: conn.body_params, errors: []}

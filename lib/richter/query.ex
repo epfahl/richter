@@ -1,6 +1,6 @@
 defmodule Richter.Query do
   alias Richter.Repo
-  alias Richter.Schema.{User, Event}
+  alias Richter.Schema.{User, Event, UserEvent}
   alias Richter.Transform, as: T
 
   import Ecto.Query
@@ -13,13 +13,7 @@ defmodule Richter.Query do
   a map of errors in the changeset.
   """
   def insert_user(user) do
-    changeset = User.changeset(%User{}, user)
-
-    if changeset.valid? do
-      {:ok, Repo.insert!(changeset)}
-    else
-      {:error, extract_changeset_errors(changeset)}
-    end
+    insert_one(User, user)
   end
 
   @doc """
@@ -30,17 +24,38 @@ defmodule Richter.Query do
   the same event (same "id") multiple times without raising a constraint
   error. Many contiguous queries of hourly event data will return common
   events.
+
+  TODO
+  ----
+  * Consolidate changeset processing and insert so that all the insert
+    functions can share similar abstractions.
   """
   def insert_events(events) do
     changesets =
       events
       |> T.prepare_event_list()
-      |> IO.inspect()
 
     Repo.transaction(fn ->
       changesets
       |> Enum.each(&Repo.insert!(&1, on_conflict: :nothing))
     end)
+  end
+
+  @doc """
+  """
+  def insert_user_event(user_event) do
+    insert_one(UserEvent, user_event)
+  end
+
+  # For the given `schema` insert a single `data` payload.
+  defp insert_one(schema, data) do
+    changeset = schema.changeset(struct(schema), data)
+
+    if changeset.valid? do
+      {:ok, Repo.insert!(changeset)}
+    else
+      {:error, extract_changeset_errors(changeset)}
+    end
   end
 
   defp extract_changeset_errors(changeset) do

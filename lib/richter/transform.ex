@@ -1,6 +1,6 @@
 defmodule Richter.Transform do
   @moduledoc """
-  Useful data transformations.
+  Useful feature/event transformations.
   """
   alias Richter.Schema.{Event}
 

@@ -1,7 +1,7 @@
 defmodule Richter.Application do
   use Application
 
-  @scheduler_period :timer.seconds(30)
+  @default_scheduler_period :timer.seconds(30)
 
   @doc """
   Note that `Richter.Store` needs to be started before `Richter.Scheduler`,
@@ -14,14 +14,58 @@ defmodule Richter.Application do
     children = [
       {Plug.Cowboy, scheme: :http, plug: Richter.Router, port: port},
       Richter.Repo,
-      {Richter.Scheduler,
-       [
-         mfa: [Richter.EventData, :get_and_insert_last_1hour_events, []],
-         period: @scheduler_period
-       ]}
+      create_scheduler_child_spec(
+        :event_scheduler,
+        :get_and_insert_last_1hour_events,
+        @default_scheduler_period
+      ),
+      create_scheduler_child_spec(
+        :notification_scheduler,
+        :notify_all_users,
+        @default_scheduler_period
+      )
+
+      # %{
+      #   id: :event_scheduler,
+      #   start:
+      #     {Richter.Scheduler, :start_link,
+      #      [
+      #        [
+      #          mfa: [Richter.EventData, :get_and_insert_last_1hour_events, []],
+      #          period: @scheduler_period
+      #        ]
+      #      ]}
+      # },
+      # %{
+      #   id: :notification_scheduler,
+      #   start:
+      #     {Richter.Scheduler, :start_link,
+      #      [
+      #        [
+      #          mfa: [Richter.Notification, :notify_all_users, []],
+      #          period: @scheduler_period
+      #        ]
+      #      ]}
+      # }
     ]
 
     opts = [strategy: :one_for_one, name: Richter.Supervisor]
     Supervisor.start_link(children, opts)
+  end
+
+  # Create scheduler child spec maps given unique ID, atom function name in MFA,
+  # and scheduler period in ms.
+  defp create_scheduler_child_spec(id, fun, period) do
+    %{
+      id: id,
+      start:
+        {Richter.Scheduler, :start_link,
+         [
+           [
+             mfa: [Richter.EventData, fun, []],
+             period: period
+           ]
+         ]}
+    }
   end
 end

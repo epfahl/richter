@@ -209,7 +209,7 @@ So many caveats and concerns...
 First, while the app has been tested in the _test-it-live_ sense, it is completely
 lacking in any serious tests. The only tests (the non-serious ones) are a couple 
 documentation tests for utility functions. What I'm saying is, don't try to make money
-off of this right away. There's lots of bullet-proofing to be done.
+off of this right away. There's lots of HTTP mocking and other bullet-proofing to be done.
 
 Take a look at the code comments for notes, todo items, "fixme"s, and thoughts on how
 I could have made different life choices. 
@@ -220,6 +220,6 @@ Also, and finally, there are probably bugs. I'd be shocked if there aren't.
 
 The development of this app was an excellent exercise in the creation of a Elixir-Plug-Cowboy-Ecto
 web service (no Phoenix!), implementation of a simple GenServer-based function scheduler, and the exploration 
-of some of the vagaries of Ecto database management. Many of these things I didn't know well when I
+of some of the vagaries of Ecto database management. Some of these things I didn't know well when I
 started, and other skills had been collecting dust. This was a really fun project and a great learning
 experience. What more could I ask for?

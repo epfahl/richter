@@ -138,7 +138,7 @@ that satisfy provided search criteria. An example JSON post payload is
 ```json
 {
   "user_id": "f3a76777-65db-4df2-b65b-70737515a1c8",
-  "coordinates": %{"long" => -122.26770501875019, "lat" => 37.80736777456761},
+  "coordinates": %{"long": -122.26770501875019, "lat": 37.80736777456761},
   "distance_km": 100.0,
   "max_age_hours": 24.0
 }
@@ -182,7 +182,7 @@ details. The response contains an echo of those details:
 
 **POST** `/admin`
 
-This endpoint is a rudimentary admin portal. But beware! This endpoint does
+This endpoint is a rudimentary admin portal. But beware! This endpoint doesn't
 have any security measures that would prevent unscrupulous actors from doing bad stuff.
 
 A properly formed admin payload is, as of now, stupid silly:
@@ -198,18 +198,15 @@ the service will fetch the last 30 days of earthquake data and insert this data 
 database. If the system is working as intended, users should not receive an explosion of
 notifications when this backfill completes.
 
-```json
-{
-  "data": earthquake details,
-  "errors": []
-}
-```
+The admin request responds with a message that indicates a successful action or some problem
+with the request.
+
 
 ## Caveats and concerns
 
 So many caveats and concerns...
 
-First, while the app has been tested in the _test-it-in-live_ sense, it is completely
+First, while the app has been tested in the _test-it-live_ sense, it is completely
 lacking in any serious tests. The only tests (the non-serious ones) are a couple 
 documentation tests for utility functions. What I'm saying is, don't try to make money
 off of this right away. There's lots of bullet-proofing to be done.

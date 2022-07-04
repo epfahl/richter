@@ -211,10 +211,17 @@ lacking in any serious tests. The only tests (the non-serious ones) are a couple
 documentation tests for utility functions. What I'm saying is, don't try to make money
 off of this right away. There's lots of HTTP mocking and other bullet-proofing to be done.
 
-Take a look at the code comments for notes, todo items, "fixme"s, and thoughts on how
-I could have made different life choices. 
+I find the code organization in `Richter` to be a little cringy. There's a significant 
+opportunity to clean up some of the abstractions and function interfaces. I also wonder
+if the code should better reflect the MVC structure, where the handler modules for 
+notification, subscription, etc, could be packed into a "controller" directory. Many 
+refactorings to explore...
 
-Also, and finally, there are probably bugs. I'd be shocked if there aren't.
+Take a look at the code comments for notes, todo items, "fixme"s, and thoughts on how
+I could have made different life choices. And feel free to explore the extensive commit log
+for the many rabbit holes, false starts, sticking points, and attention to irrelevant details.
+
+Also, there are probably bugs. I'd be shocked if there aren't.
 
 ## Personal note
 

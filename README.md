@@ -5,6 +5,9 @@
   - allows users to subscribe to earthquake notifications
   - allows subscribed users to search for earthquakes that meet certain search criteria
 
+`Richter` is constructed in the MVP-just-make-the-dang-thing-work style. Attach whatever
+disclaimers you think are prudent.  
+
 ## Before getting started
 
 To use this app on your local machine, you'll need to satisfy a few perquisites:

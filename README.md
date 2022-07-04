@@ -14,13 +14,14 @@ To use this app on your local machine, you'll need to satisfy a few perquisites:
 - make sure that Elixir is installed (v1.13 or greater)
 - make sure that Postgres and the PostGIS extension are installed
 
-If you're on a Mac, Elixir is most easily installed with Homebrew via `brew install elixir`.
+If you're on a Mac, Elixir is most easily installed with [Homebrew](https://brew.sh/) 
+via `brew install elixir`.
 If you already have Elixir installed, you can get the latest version with `brew upgrade elixir`. 
 
-Mac users benefit from access to the Mac-native Postgres app, which can be found at
-https://postgresapp.com/. The version of Postgres installed with this app comes packaged
-with PostGIS (something I discovered serendipitously). I also recommend the Postico app
-for Mac users (see a theme?).
+Mac users benefit from access to the Mac-native [Postgres app](https://postgresapp.com/). 
+The version of Postgres installed with this app comes packaged
+with PostGIS (something I discovered serendipitously). I also recommend the 
+[Postico](https://eggerapps.at/postico/) app for Mac users (see a theme?).
 
 The `Richter` application assumes that Postgres has the following configuration parameters:
 - username: "postgres"

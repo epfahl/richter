@@ -112,7 +112,7 @@ defmodule Richter.Router do
   #
   # The default testing webhook URL is http://localhost:8765/notify
   #
-  # The request payload should have the structure of a single USGS earthquake
+  # The payload should have the structure of a single USGS earthquake
   # event ("feature"). An example payload:
   #
   # {

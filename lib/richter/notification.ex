@@ -46,6 +46,9 @@ defmodule Richter.Notification do
   @doc """
   Post a single earthquake event to the webhook URL of a given user. On acknowledgement
   of the request, an entry is addeed to the `UserEvent` join table.
+
+  ## Notes
+  * TODO: Make the insert async.
   """
   def send_user_notification(user_id, webhook_url, %{id: event_id, details: details}) do
     with {:ok, _response_body} <- U.request(webhook_url, :post, json: details) do

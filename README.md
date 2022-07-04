@@ -138,7 +138,7 @@ that satisfy provided search criteria. An example JSON post payload is
 ```json
 {
   "user_id": "f3a76777-65db-4df2-b65b-70737515a1c8",
-  "coordinates": %{"long": -122.26770501875019, "lat": 37.80736777456761},
+  "coordinates": {"long": -122.26770501875019, "lat": 37.80736777456761},
   "distance_km": 100.0,
   "max_age_hours": 24.0
 }

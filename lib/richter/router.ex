@@ -8,6 +8,8 @@ defmodule Richter.Router do
 
   alias Richter.Query, as: Q
   alias Richter.Subscription, as: S
+  alias Richter.FilteredEvents, as: F
+  alias Richter.Admin, as: A
 
   plug(:match)
   plug(Plug.Parsers, parsers: [:json], json_decoder: Jason)
@@ -51,6 +53,59 @@ defmodule Richter.Router do
 
         send_resp(conn, 400, resp)
     end
+  end
+
+  # POST endpoint for getting events filtered by location, distance, and age.
+  # If the
+  #
+  # Example request payload:
+  #
+  # %{
+  #   "user_id" => "f3a76777-65db-4df2-b65b-70737515a1c8",
+  #   "coordinates" => %{"long" => -122.26770501875019, "lat" => 37.80736777456761},
+  #   "distance_km" => 100.0,
+  #   "max_age_hours" => 24.0
+  # }
+  #
+  post "/filtered_events" do
+    %{
+      "user_id" => user_id,
+      "coordinates" => %{"long" => long, "lat" => lat},
+      "max_distance_km" => max_d_km,
+      "max_age_hours" => max_age
+    } = conn.body_params
+
+    if Q.users_exists?(user_id) do
+      filtered_details =
+        F.get_filtered_event_details(%{
+          lat: lat,
+          long: long,
+          max_distance_km: max_d_km,
+          max_age_hours: max_age
+        })
+
+      resp =
+        %{data: filtered_details, errors: []}
+        |> Jason.encode!()
+
+      send_resp(conn, 200, resp)
+    else
+      send_resp(conn, 401, "unauthorized user")
+    end
+  end
+
+  # POST endpoint for admin actions.
+  #
+  # WARNING: This endpoint is purely for testing; it does not have any auth.
+  #
+  post "/admin" do
+    {status, resp} =
+      case A.handle_actions(conn.body_params) do
+        :ok -> {200, "successful request"}
+        {:error, error} -> {400, error}
+      end
+
+    send_resp(conn, status, resp)
   end
 
   # POST endpoint for testing the notification webhook

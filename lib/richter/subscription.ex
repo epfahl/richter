@@ -21,8 +21,7 @@ defmodule Richter.Subscription do
   @doc """
   Validate the user subscription body.
 
-  Notes
-  -----
+  ## Notes
   * _This is basically a stub._
   * TODO: Changesets should be used for this.
   """

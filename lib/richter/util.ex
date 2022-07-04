@@ -51,4 +51,11 @@ defmodule Richter.Util do
     |> Enum.filter(fn {k, _v} -> not Enum.member?(keys, k) end)
     |> Enum.into(%{})
   end
+
+  @doc """
+  Given latitude (`lat`) and longitude (`long`), return a `Geo.Point` struct.
+  """
+  def coords_to_geo(lat, long) do
+    %Geo.Point{coordinates: {long, lat}, srid: 4326}
+  end
 end

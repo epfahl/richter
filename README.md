@@ -26,7 +26,7 @@ The `Richter` application assumes that Postgres has the following configuration 
 - port: 5432
 
 These are typically the defaults for a new Postgres installation. If needed, these parameters can
-changed in the `Richter` configuration.
+be changed in the `Richter` configuration.
 
 ## Getting set up
 

@@ -2,7 +2,8 @@ defmodule Richter.Transform do
   @moduledoc """
   Useful feature/event transformations.
   """
-  alias Richter.Schema.{Event}
+  alias Richter.Schema.Event
+  alias Richter.Util, as: U
 
   @doc """
   Prepare a list of raw event payloads by 1) restructuring USGS features to have
@@ -44,6 +45,6 @@ defmodule Richter.Transform do
   Geo.Point struct.
   """
   def geometry_to_point(%{"geometry" => %{"coordinates" => [long, lat, _]}}) do
-    %Geo.Point{coordinates: {long, lat}, srid: 4326}
+    U.coords_to_geo(lat, long)
   end
 end

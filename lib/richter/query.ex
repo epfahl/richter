@@ -2,6 +2,7 @@ defmodule Richter.Query do
   alias Richter.Repo
   alias Richter.Schema.{User, Event, UserEvent}
   alias Richter.Transform, as: T
+  alias Richter.Util, as: U
 
   import Ecto.Query
   import Geo.PostGIS
@@ -28,11 +29,6 @@ defmodule Richter.Query do
   Given a list of USGC earthquake features (earthquake events) as normal maps,
   prepare and validate the maps, and then perform a bulk insert. These features
   are first transformed into proper `Event` payloads before insertion.
-
-  Note: `on_conflict: :nothing` is there so that we can attempt to insert
-  the same event (same "id") multiple times without raising a constraint
-  error. Many contiguous queries of hourly event data will return common
-  events.
 
   Example feature map:
   %{
@@ -72,10 +68,17 @@ defmodule Richter.Query do
     "type" => "Feature"
   }
 
-  TODO
-  ----
-  * Consolidate changeset processing and insert logic so that all the insert
-    functions can share similar abstractions.
+  ## Notes
+  * `on_conflict: :nothing` is there so that we can attempt to insert
+    the same event (same "id") multiple times without raising a constraint
+    error. Many contiguous queries of hourly event data will return common
+    events.
+
+  ## Notes
+  * TODO: Consolidate changeset processing and insert logic so that all the
+    insert functions can share similar abstractions.
+  * Extending the transaction `:timeout` to `:infinity` was necessary for the
+    backfill operation.
   """
   def insert_events(features) do
     changesets =
@@ -84,10 +87,13 @@ defmodule Richter.Query do
 
     # `Repo.transaction` was needed here because `Repo.insert_all` (bulk
     # insert) doesn't play nice with DB-autogenertated timestamps.
-    Repo.transaction(fn ->
-      changesets
-      |> Enum.each(&Repo.insert!(&1, on_conflict: :nothing))
-    end)
+    Repo.transaction(
+      fn ->
+        changesets
+        |> Enum.each(&Repo.insert!(&1, on_conflict: :nothing))
+      end,
+      timeout: :infinity
+    )
   end
 
   @doc """
@@ -119,6 +125,26 @@ defmodule Richter.Query do
     |> Repo.all()
   end
 
+  @doc """
+  Get events within a distance `d_km` in kilometers relative to a given `lat`
+  and `long`.
+  """
+  def get_near_events(lat, long, max_d_km) do
+    query_near_events(lat, long, max_d_km)
+    |> Repo.all()
+  end
+
+  @doc """
+  Return `true` a user with the given `user_id` exists in the database. This
+  is used as a simple auth measure.
+  """
+  def users_exists?(user_id) do
+    case Repo.get(User, user_id) do
+      nil -> false
+      _ -> true
+    end
+  end
+
   # Query for all users
   defp query_all_users() do
     from(u in User, select: u)
@@ -148,6 +174,20 @@ defmodule Richter.Query do
     from(e_except in subquery(q_e_except),
       join: e in Event,
       on: e_except.id == e.id,
+      select: e
+    )
+  end
+
+  @doc """
+  Query events within a distance `d_km` in kilometers relative to a given `lat`
+  and `long`.
+  """
+  def query_near_events(lat, long, max_d_km) do
+    point = U.coords_to_geo(lat, long)
+    max_d_m = max_d_km * 1_000
+
+    from(e in Event,
+      where: st_dwithin_in_meters(e.lnglat, ^point, ^max_d_m),
       select: e
     )
   end

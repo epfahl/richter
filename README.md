@@ -116,9 +116,9 @@ JSON payload, an example of which is
 ```
 
 The user-provided `endpoint` is the webhook URL that will receive earthquake notifications.
-The filters, as quoted above, tell the app to notify only for quakes of magnitude >= 1 and
-no older than 24 hours. If filters aren't provided (an empty list), the minimum magnitude
-defaults to 1.0, and the maximum age defaults to 1 hour.
+The filters listed above tell the app to notify only for _new_ (not previously notified) 
+quakes of magnitude >= 1 and no older than 24 hours. If filters aren't provided (an empty list),
+the minimum magnitude defaults to 1.0, and the maximum age defaults to 1 hour.
 
 A subscription request responds with a JSON payload of the form
 

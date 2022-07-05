@@ -1,9 +1,10 @@
 ## Summary
 
 `Richter` is a small Elixir-based web service that 
-  - periodically ingests near-real-time earthquake data and writes to a Postgres database
+  - periodically ingests near-real-time USGS earthquake data and writes to a Postgres database
   - allows users to subscribe to earthquake notifications
   - allows subscribed users to search for earthquakes that meet certain search criteria
+  - provides rudimentary admin access to kick of a backfill task for the last 30 days of earthquake data
 
 `Richter` is constructed in the MVP-just-make-the-dang-thing-work style. Attach whatever
 disclaimers you think are prudent.  

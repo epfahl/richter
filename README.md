@@ -1,13 +1,18 @@
 ## Summary
 
-`Richter` is a small Elixir-based web service that 
+`Richter` is a small, poorly organized Elixir-based web service that 
   - periodically ingests near-real-time USGS earthquake data and writes to a Postgres database
   - allows users to subscribe to earthquake notifications
   - allows subscribed users to search for earthquakes that meet certain search criteria
   - provides rudimentary admin access to kick of a backfill task for the last 30 days of earthquake data
 
 `Richter` is constructed in the MVP-just-make-the-dang-thing-work style. Attach whatever
-disclaimers you think are prudent.  
+disclaimers you think are prudent.
+
+The development of this app was an exercise in the creation of a Elixir-Plug-Cowboy-Ecto
+web service (no Phoenix!), implementation of a simple GenServer-based function scheduler, 
+and the exploration of some of the vagaries of Ecto database management. Some of these 
+things I didn't know well when I started, and other skills had been collecting dust.
 
 ## Before getting started
 
@@ -16,13 +21,13 @@ To use this app on your local machine, you'll need to satisfy a few perquisites:
 - make sure that Postgres and the PostGIS extension are installed
 
 If you're on a Mac, Elixir is most easily installed with [Homebrew](https://brew.sh/) 
-via `brew install elixir`.
-If you already have Elixir installed, you can get the latest version with `brew upgrade elixir`. 
+via `brew install elixir`. If you already have Elixir installed, you can get the latest 
+version with `brew upgrade elixir`. 
 
 Mac users benefit from access to the Mac-native [Postgres app](https://postgresapp.com/). 
-The version of Postgres installed with this app comes packaged
-with PostGIS (something I discovered serendipitously). I also recommend the 
-[Postico](https://eggerapps.at/postico/) app for Mac users (see a theme?).
+The version of Postgres installed with this app comes packaged with PostGIS (something 
+I discovered serendipitously). I also recommend the [Postico](https://eggerapps.at/postico/) 
+app for Mac users.
 
 The `Richter` application assumes that Postgres has the following configuration parameters:
 - username: "postgres"
@@ -31,7 +36,7 @@ The `Richter` application assumes that Postgres has the following configuration 
 - port: 5432
 
 These are typically the defaults for a new Postgres installation. If needed, these parameters can
-be changed in the `Richter` configuration.
+be changed in `config/config.exs`.
 
 ## Getting set up
 
@@ -50,23 +55,22 @@ With the repo cloned, repeat the following incantation in your terminal
 > mix ecto.migrate   # run database migrations
 ```
 
-These steps set up the database as a clean slate. (It might have been a good idea 
-to dump these into a bash script.)
+These steps set up the database as a clean slate.
 
 If you're unfamiliar with Elixir, `mix` is Elixir's Swiss Army knife for compilation, 
-building, code generation, and lots of other things. At this point, don't
-worry about the specifics of the above `mix` tasks; just know that they're needed
-before we can run the app.
+building, code generation, and lots of other things. At this point, don't worry about 
+the specifics of the above `mix` tasks; just know that they're needed before we can 
+un the app.
 
 ## Running the app
 
 When the app is started, a few things happen. First, the web server starts and makes
 a number of endpoints available to users and admins (see below). Second, a scheduler
-for fetching earthquake data (every minute) initiates. Third, another scheduler starts
-that looks for new earthquake events (also every minute) to send to subscribed users.
+for fetching earthquake data (every minute, by default) initiates. Third, another 
+scheduler starts that looks for new earthquake events (also every minute, by default) 
+to send to subscribed users.
 
-I'm telling you this so you have an idea of the chaos about to be unleashed when you
-enter the following command in your terminal (still at the project root):
+To kick things off, enter the following command at the project root:
 
 ```
 > mix run --no-halt
@@ -143,15 +147,16 @@ that satisfy provided search criteria. An example JSON post payload is
 ```json
 {
   "user_id": "f3a76777-65db-4df2-b65b-70737515a1c8",
-  "coordinates": {"long": -122.26770501875019, "lat": 37.80736777456761},
+  "coordinates": {"long": -79.096352, "lat": 36.074600},
   "distance_km": 100.0,
   "max_age_hours": 24.0
 }
 ```
 
 This request will respond with a list of all earthquakes within 100 km of 
-(37.80736777456761, -122.26770501875019) that are more recent than 24 hours. Obviously, this
-is an incredibly simplistic approach to search, but it serves as an extensible demonstration.
+(36.074600, -79.096352) that are more recent than 24 hours. Obviously, this
+is an incredibly simplistic approach to search, but it serves as an extensible 
+demonstration.
 
 A successful request responds with a payload of the form
 
@@ -166,7 +171,7 @@ A successful request responds with a payload of the form
 
 Shhhhh...
 
-These endpoints aren't so much secret as they are hack jobs.
+These endpoints aren't so much secret as they are hacks.
 
 ### Notification webhook
 
@@ -227,11 +232,3 @@ I could have made different life choices. And feel free to explore the extensive
 for the many rabbit holes, false starts, sticking points, and attention to irrelevant details.
 
 Also, there are probably bugs. I'd be shocked if there aren't.
-
-## Personal note
-
-The development of this app was an excellent exercise in the creation of a Elixir-Plug-Cowboy-Ecto
-web service (no Phoenix!), implementation of a simple GenServer-based function scheduler, and the exploration 
-of some of the vagaries of Ecto database management. Some of these things I didn't know well when I
-started, and other skills had been collecting dust. This was a really fun project and a great learning
-experience. What more could I ask for?
